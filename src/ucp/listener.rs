@@ -10,7 +10,8 @@ use ucx_sys::{ucp_listener_query, ucp_conn_request_query};
 #[derive(Debug)]
 pub struct Listener {
     handle: ucp_listener_h,
-    // sender: Rc<mpsc::UnboundedSender<ConnectionRequest>>,
+    #[allow(unused)]
+    sender: Rc<mpsc::UnboundedSender<ConnectionRequest>>,
     recver: mpsc::UnboundedReceiver<ConnectionRequest>,
 }
 
@@ -78,7 +79,7 @@ impl Listener {
         trace!("create listener={:?}", handle);
         Ok(Listener {
             handle: unsafe { handle.assume_init() },
-            // sender,
+            sender,
             recver,
         })
     }
