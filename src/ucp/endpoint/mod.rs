@@ -301,6 +301,42 @@ impl Drop for Endpoint {
     }
 }
 
+/// AsyncReader for Endpoint.
+pub struct AsyncStreamReaderEndpoint {
+    endpoint: Endpoint,
+    buffer: Vec<u8>,
+    read_buffer: Vec<u8>,
+    handle: Option<RequestHandle<usize>>,
+}
+
+impl AsyncStreamReaderEndpoint {
+    pub fn new(endpoint: Endpoint) -> Self {
+        Self {
+            endpoint,
+            buffer: Vec::new(),
+            read_buffer: Vec::new(),
+            handle: None,
+        }
+    }
+}
+
+/// AsyncWriter for Endpoint.
+pub struct AsyncStreamWriterEndpoint {
+    endpoint: Endpoint,
+    handle: Option<RequestHandle<Result<(), Error>>>,
+    flush_handle: Option<RequestHandle<Result<(), Error>>>,
+}
+
+impl AsyncStreamWriterEndpoint {
+    pub fn new(endpoint: Endpoint) -> Self {
+        Self {
+            endpoint,
+            handle: None,
+            flush_handle: None,
+        }
+    }
+}
+
 /// A handle to the request returned from async IO functions.
 struct RequestHandle<T> {
     ptr: ucs_status_ptr_t,
